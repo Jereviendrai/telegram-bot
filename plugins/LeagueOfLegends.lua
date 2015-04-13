@@ -1,42 +1,46 @@
 --League of Legends telegram-bot plugin
 --Author: ltobler (Jkoer in LoL!) and sgitkene
+--api_key: issued by riot
 
 -- WORK IN PROGRESS
-
+local api_key=55eab29b-52e9-48ba-8fe7-41e57f98a395
 local news_amount=5
 
-local function getID(summonerName) --TODO
-    local url="https://euw.api.pvp.net/api/lol/euw/v1.4/summoner/by-name/SUMMONERNAME_TOKEN?api_key=55eab29b-52e9-48ba-8fe7-41e57f98a395"
-    url = string.gsub(url, "SUMMONERNAME_TOKEN", summonderName)
+local function get_id(summoner_name) --TODO
+    local url="https://euw.api.pvp.net/api/lol/euw/v1.4/summoner/by-name/"..summoner_name.."?api_key="..api_key 
     local res,status = http.request()
     if status ~= 200 then return nil end -- status 200 means everything ok, other thatn that means not ok. retrying is discouraged as there exists a rate limit.
-    summonerID = -- TODO get it out of res string...
+    local data = json:decode(res)
+    return data.summoner_name.id
 end
 
-local function getElo(summonerID) --TODO
+local function get_elo(summoner_name) --TODO
+    local id = get_id(summoner_name)
 end
 
-local function getStatus(summonerID) --TODO
+local function get_status(summoner_name) --TODO
+    local id = get_id(summoner_name)
 end
 
-local function getNews() --TODO
+local function get_news() --TODO
+    
 end
 
 function run(msg, matches)
     if(matches[1]=="!elo") then
-        elo = getElo[2]
+        elo = get_elo[2]
         if(elo==nil) then
             return "Summoner not found"        
         end
         return matches[2]..": "..elo
     elseif(matches[1]=="!lolstatus") then
-        status = getStatus(matches[2])
+        status = get_status(matches[2])
         if(status==nil) then
             return "Summoner not found"
         end
         return matches[2].." is currently "..status
     elseif(matches[1]=="!lolnews") then
-        news_batch = getNews()
+        news_batch = get_news()
         if (news_batch==nil)
             return "Error fetching news"        
         end
