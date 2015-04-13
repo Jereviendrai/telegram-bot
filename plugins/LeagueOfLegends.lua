@@ -1,14 +1,22 @@
 --League of Legends telegram-bot plugin
---Author: ltobler, (Jkoer in LoL!)
+--Author: ltobler (Jkoer in LoL!) and sgitkene
 
 -- WORK IN PROGRESS
 
 local news_amount=5
 
-local function getElo(summoner) --TODO
+local function getID(summonerName) --TODO
+    local url="https://euw.api.pvp.net/api/lol/euw/v1.4/summoner/by-name/SUMMONERNAME_TOKEN?api_key=55eab29b-52e9-48ba-8fe7-41e57f98a395"
+    url = string.gsub(url, "SUMMONERNAME_TOKEN", summonderName)
+    local res,status = http.request()
+    if status ~= 200 then return nil end -- status 200 means everything ok, other thatn that means not ok. retrying is discouraged as there exists a rate limit.
+    summonerID = -- TODO get it out of res string...
 end
 
-local function getStatus(summoner) --TODO
+local function getElo(summonerID) --TODO
+end
+
+local function getStatus(summonerID) --TODO
 end
 
 local function getNews() --TODO
