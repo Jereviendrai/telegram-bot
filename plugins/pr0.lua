@@ -38,27 +38,29 @@ function getBenis(user)
 end
 
 function getRandomImage(msg, filter)
-    if filter = "sfw" then
-        local url = "http://pr0gramm.com/api/items/get?promoted=1"
-    elseif filter = "nsfw" then
-        local url = "http://pr0gramm.com/api/items/get?promoted=1&flags=2"
-    elseif filter = "nsfl" then
-        local url = "http://pr0gramm.com/api/items/get?promoted=1&flags=4"   
+    local url = nil
+    if filter == "sfw" then
+        url = "http://pr0gramm.com/api/items/get?promoted=1"
+    elseif filter == "nsfw" then
+        url = "http://pr0gramm.com/api/items/get?promoted=1&flags=2"
+    elseif filter == "nsfl" then
+        url = "http://pr0gramm.com/api/items/get?promoted=1&flags=4"   
     else
         return false    
     end 
-    
+
     local b,status = http.request(url)
     if status ~= 200 then --200 = OK
         return false
     end
     
     local img_data = json:decode(b)    
-    while true   
-        i = math.random[#img_data.items]
-        if(string.find(img_data.items[i].image,".jpg") or 
-            string.find(img_data.item[i].image,".png") then
-        break
+    while true do
+        i = math.random(#img_data.items)
+        if(string.find(img_data.items[i].image,".jpg") or
+            string.find(img_data.items[i].image,".png")) then
+            break
+        end
     end
     local img_url = "http://img.pr0gramm.com/"..img_data.items[i].image
     send_photo_from_url(get_receiver(msg), img_url)
@@ -72,7 +74,7 @@ function run(msg, matches)
             return "Sorry, der User existiert nicht."
         end
         return matches[2].." hat "..score.." Benis"
-    if matches[1] == "!pr0" then
+    elseif matches[1] == "!pr0" then
         if not getRandomImage(msg, matches[2]) then
             return "Ungültiger filter."
         end
@@ -101,7 +103,7 @@ return{
         "^http://pr0gramm.com/top/[%w%s%d%l%u%%]+/(%w+)$",
         "^http://pr0gramm.com/new/[%w%s%d%l%u%%]+/(%w+)$",   
         "^(!benis) (.+)$",
-        "^(!pro) (.+)$"
+        "^(!pr0) (.+)$"
     },
     run = run
 }
