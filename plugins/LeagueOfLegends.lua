@@ -1,9 +1,10 @@
 --League of Legends telegram-bot plugin
 --Author: ltobler (Jkoer in LoL!) and sgitkene
---api_key: issued by riot
+
 
 -- WORK IN PROGRESS
-local api_key=55eab29b-52e9-48ba-8fe7-41e57f98a395
+
+local api_key="55eab29b-52e9-48ba-8fe7-41e57f98a395"
 local news_amount=5
 
 local function get_id(summoner_name) --TODO
