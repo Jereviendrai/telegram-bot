@@ -64,7 +64,9 @@ local function get_random_image(msg, f, t) --filter, tag
             tag = "&tags="..URL.escape(t)
         end --else tag stays empty
     else --f becomes tag
-        tag = "&tags="..URL.escape(f)  
+        if f~=nil then
+            tag = "&tags="..URL.escape(f) 
+        end --else tag stays empty 
     end
 
     local url = "http://pr0gramm.com/api/items/get?promoted=1"..tag..flag
