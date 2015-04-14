@@ -1,4 +1,4 @@
---By sgitkene, atleast the idea...
+--Idea: sgitkene
 
 local slaps = {
     "Consider yourself slapped, /!", 
