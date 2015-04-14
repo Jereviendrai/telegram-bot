@@ -90,8 +90,7 @@ return{
     usage = {
         "[pr0 url]: Man pasted nicht über das pr0 in telegram",
         "!benis [fag]: Zeigt benis",
-        "!pr0 [tag]: Zufälliges Bild aus [sfw, nsfw, nsfl, tag]\
-        (arbitrary tag search experimental)"
+        "!pr0 [tag]: Zufälliges Bild aus [sfw, nsfw, nsfl, tag]"
     },
     patterns = {
         -- Urls, second block include search keywords
