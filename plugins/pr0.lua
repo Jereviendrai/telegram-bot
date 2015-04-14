@@ -38,7 +38,7 @@ local function get_benis(user)
     return user_data.user.score --Benis return
 end
 
-local function get_ranom_image(msg, f, t) --filter, tag
+local function get_random_image(msg, f, t) --filter, tag
     local tag = ""
     local flag = "&flags="
     local f_set = false
