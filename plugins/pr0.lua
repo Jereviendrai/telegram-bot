@@ -1,4 +1,5 @@
 -- pr0gramm.com plugin for telegram-bot
+-- Man programmiert nicht über das Pr0gramm!
 
 --returns: FALSE if any error, TRUE if data sent off
 local function get_Pr0_image(msg,id)
@@ -37,28 +38,45 @@ local function get_benis(user)
     return user_data.user.score --Benis return
 end
 
-local function get_random_image(msg, filter)
-    local url = "http://pr0gramm.com/api/items/get?promoted=1"
-    if filter == "sfw" then
-        url = url.."&flags=1"
-    elseif filter == "nsfw" then
-        url = url.."&flags=2"
-    elseif filter == "nsfl" then
-        url = url.."&flags=4"   
-    else --tag search
-        tag=URL.escape(filter)
-        url = "http://pr0gramm.com/api/items/get?promoted=1&tags="..tag.."&flags=7"
-    end 
+local function get_ranom_image(msg, f, t) --filter, tag
+    local tag = ""
+    local flag = "&flags="
+    local f_set = false
+    
+    if f=="sfw" then       --SFW
+        flag = flag.."1"
+        f_set = true
+    elseif f=="nsfw" then  --NSFW
+        flag = flag.."2"
+        f_set = true
+    elseif f=="nsfl" then  --NFSL
+        flag = flag.."4"
+        f_set = true 
+    else                   --ALL
+        if t == nil then
+            return 2 --filter invalid        
+        end  
+        flag = flag.."7"
+    end
+    
+    if f_set then
+        if t~=nil then
+            tag = "&tags="..URL.escape(t)
+        end --else tag stays empty
+    else --f becomes tag
+        tag = "&tags="..URL.escape(f)  
+    end
 
+    local url = "http://pr0gramm.com/api/items/get?promoted=1"..tag..flag
     local b,status = http.request(url)
     if status ~= 200 then --200 = OK
-        return false
+        return 3
     end
     
     local img_data = json:decode(b)
     while true do
         if #img_data.items == 0 then
-            return false    
+            return 1   
         end  
 
         i = math.random(#img_data.items)
@@ -70,7 +88,7 @@ local function get_random_image(msg, filter)
     end
     local img_url = "http://img.pr0gramm.com/"..img_data.items[i].image
     send_photo_from_url(get_receiver(msg), img_url)
-    return true
+    return 0 
 end
 
 function run(msg, matches)   
@@ -80,10 +98,19 @@ function run(msg, matches)
             return "Sorry, der User existiert nicht."
         end
         return matches[2].." hat "..score.." Benis"
+    
     elseif matches[1] == "!pr0" then
-        if not get_random_image(msg, matches[2]) then
+        ret_val = get_random_image(msg, matches[2], matches[3])
+        if ret_val == 0 then
+            return nil
+        elseif ret_val == 1 then
             return "Keine Bilder gefunden."
+        elseif ret_val == 2 then
+            return "Ungültiger Filter"
+        elseif ret_val == 3 then
+            return "Interner Error"        
         end
+    
     else
         if not get_Pr0_image(msg, matches[2]) then
             return "Sorry, der gewünschte Content existiert nicht."        
@@ -91,19 +118,13 @@ function run(msg, matches)
     end
 end
 
-local function encode_for_url(str)
-    string.gsub(str, " ", "%20")
-    string.gsub(str, "!", "%20")
-    string.gsub(str, "$", "%20")
-    string.gsub(str, "%", "%20")
-end
-
 return{
     description = "Man telegramt nicht über das pr0",
     usage = {
         "[pr0 url]: Man pasted nicht über das pr0 in telegram",
         "!benis [fag]: Zeigt benis",
-        "!pr0 [tag]: Zufälliges Bild aus [sfw, nsfw, nsfl, tag]"
+        "!pr0 [filter] [tag]: Zufälliges Bild mit Filter [sfw, nsfw, nsfl], \
+        kein Filter -> [all], Tag optional", 
     },
     patterns = {
         -- Urls, second block include search keywords
@@ -116,7 +137,10 @@ return{
         "^http://pr0gramm.com/top/[%w%s%d%l%u%%]+/(%w+)$",
         "^http://pr0gramm.com/new/[%w%s%d%l%u%%]+/(%w+)$",   
         "^(!benis) (.+)$",
-        "^(!pr0) (.+)$"
+        "^(!pr0) (.+)$",
+        "^(!pr0) (sfw) (.+)$",
+        "^(!pr0) (nsfw) (.+)$",
+        "^(!pr0) (nsfl) (.+)$",
     },
     run = run
 }
