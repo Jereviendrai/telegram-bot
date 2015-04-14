@@ -53,7 +53,7 @@ local function get_random_image(msg, f, t) --filter, tag
         flag = flag.."4"
         f_set = true 
     else                   --ALL
-        if t == nil then
+        if t ~= nil then
             return 2 --filter invalid        
         end  
         flag = flag.."7"
@@ -140,7 +140,8 @@ return{
         "^(!pr0) (sfw) (.+)$",
         "^(!pr0) (nsfw) (.+)$",
         "^(!pr0) (nsfl) (.+)$",
-        "^(!pr0) (.+)$",
+        "^(!pr0) (.*)$",
+        "^(!pr0)$",
     },
     run = run
 }
