@@ -1,17 +1,19 @@
 --League of Legends telegram-bot plugin
---Author: ltobler (Jkoer in LoL!) and sgitkene
-
+--Author: ltobler and sgitkene
 
 -- WORK IN PROGRESS
 
-local api_key=
+local api_key=""
 local news_amount=5
 
 local function get_id(summoner_name) --TODO
-    local url="https://euw.api.pvp.net/api/lol/euw/v1.4/summoner/by-name/"..summoner_name.."?api_key="..api_key 
-    local res,status = http.request()
-    if status ~= 200 then return nil end -- status 200 means everything ok, other thatn that means not ok. retrying is discouraged as there exists a rate limit.
-    local data = json:decode(res)
+    local url="https://euw.api.pvp.net/api/lol/euw/v1.4/summoner/by-name/"..summoner_name..\
+        "?api_key="..api_key 
+    local b,status = http.request()
+    if status ~= 200 then --200 = OK
+        return nil 
+    end
+    local data = json:decode(b)
     return data.summoner_name.id
 end
 
@@ -23,8 +25,7 @@ local function get_status(summoner_name) --TODO
     local id = get_id(summoner_name)
 end
 
-local function get_news() --TODO
-    
+local function get_news() --TODO  
 end
 
 function run(msg, matches)
