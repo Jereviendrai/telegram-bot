@@ -55,13 +55,18 @@ local function get_random_image(msg, filter)
         return false
     end
     
-    local img_data = json:decode(b)    
+    local img_data = json:decode(b)
     while true do
         i = math.random(#img_data.items)
+        if #img_data.items == 0 then
+            return false    
+        end  
+        
         if(string.find(img_data.items[i].image,".jpg") or
             string.find(img_data.items[i].image,".png")) then
             break
         end
+        table.remove(img_data.items, i)
     end
     local img_url = "http://img.pr0gramm.com/"..img_data.items[i].image
     send_photo_from_url(get_receiver(msg), img_url)
@@ -77,7 +82,7 @@ function run(msg, matches)
         return matches[2].." hat "..score.." Benis"
     elseif matches[1] == "!pr0" then
         if not get_random_image(msg, matches[2]) then
-            return "Ungültiger filter."
+            return "Keine Bilder gefunden."
         end
     else
         if not get_Pr0_image(msg, matches[2]) then
