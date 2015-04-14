@@ -45,8 +45,9 @@ local function get_random_image(msg, filter)
         url = url.."&flags=2"
     elseif filter == "nsfl" then
         url = url.."&flags=4"   
-    else
-        url = "http://pr0gramm.com/api/items/get?tags="..filter --go for tag search
+    else --tag search
+        tag=URL.escape(filter)
+        url = "http://pr0gramm.com/api/items/get?promoted=1&tags="..tag.."&flags=7"
     end 
 
     local b,status = http.request(url)
@@ -83,6 +84,13 @@ function run(msg, matches)
             return "Sorry, der gewünschte Content existiert nicht."        
         end
     end
+end
+
+local function encode_for_url(str)
+    string.gsub(str, " ", "%20")
+    string.gsub(str, "!", "%20")
+    string.gsub(str, "$", "%20")
+    string.gsub(str, "%", "%20")
 end
 
 return{
