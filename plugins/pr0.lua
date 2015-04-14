@@ -53,9 +53,6 @@ local function get_random_image(msg, f, t) --filter, tag
         flag = flag.."4"
         f_set = true 
     else                   --ALL
-        if t ~= nil then
-            return 2 --filter invalid        
-        end  
         flag = flag.."7"
     end
     
@@ -72,7 +69,7 @@ local function get_random_image(msg, f, t) --filter, tag
     local url = "http://pr0gramm.com/api/items/get?promoted=1"..tag..flag
     local b,status = http.request(url)
     if status ~= 200 then --200 = OK
-        return 3
+        return 2
     end
     
     local img_data = json:decode(b)
@@ -108,8 +105,6 @@ function run(msg, matches)
         elseif ret_val == 1 then
             return "Keine Bilder gefunden."
         elseif ret_val == 2 then
-            return "Ungültiger Filter"
-        elseif ret_val == 3 then
             return "Interner Error"        
         end
     
