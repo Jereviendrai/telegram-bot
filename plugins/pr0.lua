@@ -57,11 +57,11 @@ local function get_random_image(msg, filter)
     
     local img_data = json:decode(b)
     while true do
-        i = math.random(#img_data.items)
         if #img_data.items == 0 then
             return false    
         end  
-        
+
+        i = math.random(#img_data.items)
         if(string.find(img_data.items[i].image,".jpg") or
             string.find(img_data.items[i].image,".png")) then
             break
