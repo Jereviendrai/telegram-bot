@@ -46,7 +46,7 @@ local function get_random_image(msg, filter)
     elseif filter == "nsfl" then
         url = url.."&flags=4"   
     else
-        url = "http://pr0gramm.com/api/items/get?tags="..filter
+        url = "http://pr0gramm.com/api/items/get?tags="..filter --go for tag search
     end 
 
     local b,status = http.request(url)
