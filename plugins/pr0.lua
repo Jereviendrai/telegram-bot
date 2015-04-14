@@ -1,7 +1,7 @@
 -- pr0gramm.com plugin for telegram-bot
 
 --returns: FALSE if any error, TRUE if data sent off
-function getPr0Image(msg,id)
+local function get_Pr0_image(msg,id)
     local b,status = http.request("http://pr0gramm.com/api/items/get?id="..id.."&flags=7")
     if status ~= 200 then -- 200 = OK
         return false
@@ -23,7 +23,7 @@ function getPr0Image(msg,id)
 end
 
 --Calls api, returns number(benis)
-function getBenis(user)
+local function get_benis(user)
     local url = "http://pr0gramm.com/api/profile/info?name="..user.."&self=true%20HTTP/1.1"
     local b,status = http.request(url)
     if status ~= 200 then --200 = OK
@@ -37,16 +37,16 @@ function getBenis(user)
     return user_data.user.score --Benis return
 end
 
-function getRandomImage(msg, filter)
-    local url = nil
+local function get_random_image(msg, filter)
+    local url = "http://pr0gramm.com/api/items/get?promoted=1"
     if filter == "sfw" then
-        url = "http://pr0gramm.com/api/items/get?promoted=1"
+        url = url.."&flags=1"
     elseif filter == "nsfw" then
-        url = "http://pr0gramm.com/api/items/get?promoted=1&flags=2"
+        url = url.."&flags=2"
     elseif filter == "nsfl" then
-        url = "http://pr0gramm.com/api/items/get?promoted=1&flags=4"   
+        url = url.."&flags=4"   
     else
-        return false    
+        url = "http://pr0gramm.com/api/items/get?tags="..filter
     end 
 
     local b,status = http.request(url)
@@ -69,17 +69,17 @@ end
 
 function run(msg, matches)   
     if matches[1] == "!benis" then
-        score = getBenis(matches[2])
+        score = get_benis(matches[2])
         if score == nil then 
             return "Sorry, der User existiert nicht."
         end
         return matches[2].." hat "..score.." Benis"
     elseif matches[1] == "!pr0" then
-        if not getRandomImage(msg, matches[2]) then
+        if not get_random_image(msg, matches[2]) then
             return "Ungültiger filter."
         end
     else
-        if not getPr0Image(msg, matches[2]) then
+        if not get_Pr0_image(msg, matches[2]) then
             return "Sorry, der gewünschte Content existiert nicht."        
         end
     end
@@ -90,7 +90,8 @@ return{
     usage = {
         "[pr0 url]: Man pasted nicht über das pr0 in telegram",
         "!benis [fag]: Zeigt benis",
-        "!pr0 [filter]: Zufälliges Bild aus [sfw, nsfw, nsfl]"
+        "!pr0 [tag]: Zufälliges Bild aus [sfw, nsfw, nsfl, tag]\
+        (arbitrary tag search experimental)"
     },
     patterns = {
         -- Urls, second block include search keywords
