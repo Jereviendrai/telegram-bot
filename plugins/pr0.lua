@@ -137,10 +137,10 @@ return{
         "^http://pr0gramm.com/top/[%w%s%d%l%u%%]+/(%w+)$",
         "^http://pr0gramm.com/new/[%w%s%d%l%u%%]+/(%w+)$",   
         "^(!benis) (.+)$",
-        "^(!pr0) (.+)$",
         "^(!pr0) (sfw) (.+)$",
         "^(!pr0) (nsfw) (.+)$",
         "^(!pr0) (nsfl) (.+)$",
+        "^(!pr0) (.+)$",
     },
     run = run
 }
