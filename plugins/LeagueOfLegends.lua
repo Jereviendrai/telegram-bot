@@ -2,6 +2,7 @@
 --Author: ltobler and sgitkene
 
 -- WORK IN PROGRESS
+local region_table={"br","eune","euw","kr","lan","las","na","oce","ru","tr"}
 local region="euw"
 local api_key=""
 local news_amount=5
@@ -9,7 +10,7 @@ local news_amount=5
 local function get_id(summoner_name) --TODO
     local url="https://"..region..".api.pvp.net/api/lol/"..region..\
         "/v1.4/summoner/by-name/"..summoner_name.."?api_key="..api_key 
-    local b,status = http.request()
+    local b,status = http.request(url)
     if status ~= 200 then --200 = OK
         return nil 
     end
@@ -17,8 +18,15 @@ local function get_id(summoner_name) --TODO
     return data.summoner_name.id
 end
 
-local function get_elo(summoner_name) --TODO
+local function get_elo(summoner_name)
     local id = get_id(summoner_name)
+    local url = "/api/lol/"..region"/v2.5/league/by-summoner/"..id.."/entry"
+    local b, status = http.request(url)
+    if status ~= 200 then
+        return nil
+    end
+    local data = json:decode(b)
+    return data[1].tier.." "..data[1].entries.division
 end
 
 local function get_status(summoner_name) --TODO
@@ -26,6 +34,15 @@ local function get_status(summoner_name) --TODO
 end
 
 local function get_news() --TODO  
+end
+
+local function is_region(r)
+    for i,k in pairs(region_table) do
+        if k==r then
+            return true
+        end   
+    end
+    return false
 end
 
 function run(msg, matches)
@@ -60,9 +77,8 @@ function run(msg, matches)
             return "ERROR: Invalid amount"
         end
     elseif(matches[1]=="region") then
-        local r = matches[1]
-        if r=="euw" or r=="na" then --TODO add support for all regions
-            region = r   
+        if is_regtion(matches[1]) then
+            region = matches[1]
         end   
     end
 end
